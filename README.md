@@ -28,7 +28,7 @@ The main challenge is how to correctly retrieve father, mother, siblings and son
 
 ## Data model:
 
-![img](/Users/jelly/Development/18fall_code/si664_code/finalproj-got-asoiaf/static/img/data-model.png)
+![img](./static/img/data-model.png)
 
 many to many relationship: 
 
