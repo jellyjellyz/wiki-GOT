@@ -2,11 +2,11 @@
 
 ## Purpose
 
-​    Being a fan of tv shows, I am interested in building a wiki-like Django application for one particular tv series. With the large number of characters, super complicated relationships, and especially the popularity, Game of Throne becomes the best choice. 
+Being a fan of tv shows, I am interested in building a wiki-like Django application for one particular tv series. With the large number of characters, super complicated relationships, and especially the popularity, Game of Throne becomes the best choice. 
 
-​    Although there already have some wiki or wikia pages of Game of Throne, the description for each character or event is so long that it’s hard for us to take away the main content, besides, there is no timeline for each character. So I would like to make a simpler and refiner version for it.
+Although there already have some wiki or wikia pages of Game of Throne, the description for each character or event is so long that it’s hard for us to take away the main content, besides, there is no timeline for each character. So I would like to make a simpler and refiner version for it.
 
-The website will be divided into three sections. 
+This website will be divided into three sections. 
 
 1. character: for each character, in addition to the basic introduction, the page will also display a family tree and a major events timeline of him/her. 
 
