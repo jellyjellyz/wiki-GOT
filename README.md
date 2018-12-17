@@ -4,27 +4,28 @@
 
 Being a fan of tv shows, I am interested in building a wiki-like Django application for one particular tv series. With the large number of characters, super complicated relationships, and especially the popularity, Game of Throne becomes the best choice. 
 
-Although there already have some wiki or wikia pages of Game of Throne, the description for each character or event is so long that it’s hard for us to take away the main content, besides, there is no timeline for each character. So I would like to make a simpler and refiner version for it.
+Although there already have some wiki or wikia pages of Game of Throne, the description for each character or event is so long that it’s hard for us to take away the main content of each character. So I would like to make a simpler and refiner version for it.
 
-This website will be divided into three sections. 
+This website include two parts of information. 
 
-1. character: for each character, in addition to the basic introduction, the page will also display a family tree and a major events timeline of him/her. 
+1. character: for each character, in addition to the basic introduction, the page will also display a family tree. 
 
 2. Houses: house introduction and people in this house.
 
-3. Historical timeline: year and description.
 
 The main challenge is how to correctly retrieve father, mother, siblings and son/daughter from database and generate the hierarchical family tree in the web page for each character. The character family ties dataset I already got only contains the father and mother information for each character. The solution of retrieving those information may involve the recursive database operation. What’s more, how to render a user friendly family tree graph with relationship  between characters is another challenge.
 
-## Data set: 
+## Data source: 
 
-[location, character, relationship](https://github.com/mneedham/neo4j-got/tree/master/data/import)
+data comes from:
 
-[individual events](https://docs.google.com/spreadsheets/d/1ZsY3lcDDtTdBWp1Gx6mfkdtZT6-Gk0kdTGeSC_Dj7WM/edit#gid=8)
+https://gameofthrones.fandom.com/wiki/Game_of_Thrones_Wiki
 
-[character detail](https://github.com/girikuncoro/thrones/blob/master/data/thrones_characters.csv)
+https://www.hbo.com/game-of-thrones/cast-and-crew
 
-[events and timeline](https://awoiaf.westeros.org/index.php/Timeline_of_major_events)
+https://github.com/mneedham/neo4j-got/tree/master/data/import
+
+https://api.got.show/doc/
 
 ## Data model:
 
