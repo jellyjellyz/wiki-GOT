@@ -1,0 +1,46 @@
+{% extends 'gameofthrones/base.html' %}
+
+{% block content %}
+<main class="px-4 py-3 character-page">
+    <div class="container-fluid">
+        <article>
+            <header>
+                <h2><b>Lead Characters</b></h2>
+            </header>
+
+
+            {% if characters %}
+            <div class="row">
+
+
+                {% for character in characters %}
+                <div class="col-3 col-md-2 col-lg-1">
+                    <div class="card contain">
+                        {% if character.character_img_file_name %}
+                        {% load static %}
+                        {% with 'img/character_images/'|add:character.character_img_file_name as image_static %}
+                        <img class="card-img-top image" src="{% static image_static %}" />
+                        {% endwith %}
+                        {% else %}
+                        <img class="card-img-top image" src="{% static 'img/character_images/wildcard.jpg' %}" />
+                        {% endif %}
+                        <p class="middle"><a href="{% url 'character_detail' character.pk %}">
+                            {{character.full_name | safe }}</a>
+                        </p>
+
+                    </div>
+                </div>
+
+
+                {% endfor %}
+
+            </div>
+            {% else %}
+            <p>No Characters are available to view.</p>
+            {% endif %}
+
+            <p>page count: {{ characters.count }}</p>
+        </article>
+    </div>
+</main>
+{% endblock content %}

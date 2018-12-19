@@ -1,0 +1,34 @@
+{% extends 'gameofthrones/base.html' %}
+
+{% block content %}
+<main class="px-4 py-3 character-page">
+    <div class="container-fluid">
+        <article>
+            <header>
+                <h2><b>All Characters</b></h2>
+            </header>
+
+            {% include './pagination.html' %}
+
+            {% if characters %}
+            <ul class="row all-character-list">
+
+
+                {% for character in characters %}
+                <li class="col-12 col-md-4">
+                    <a href="{% url 'character_detail' character.pk %}">{{ character.full_name | safe }}</a>
+                </li>
+
+
+                {% endfor %}
+
+            </ul>
+            {% else %}
+            <p>No Characters are available to view.</p>
+            {% endif %}
+
+            <p>page count: {{ characters.count }}</p>
+        </article>
+    </div>
+</main>
+{% endblock content %}

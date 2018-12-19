@@ -1,0 +1,239 @@
+/*
+ * Page layout
+ */
+
+body {
+    /* background:url(../img/background.jpg) no-repeat !important;
+    padding-top:100px;
+    background-size:cover;
+    font-family: 'Lato', sans-serif; */
+    background-image: url(../img/background.jpg);
+    font-family: 'Lato', sans-serif;
+    background-size: cover;   
+    background-repeat: no-repeat;
+    background-position: center center; 
+    background-attachment: fixed;
+    color: #FFFFFF;
+}
+
+a, a:hover {
+    text-decoration: none;
+}
+
+/*
+ * Navigation
+ */
+
+nav {
+    background-color: transparent;
+}
+
+/*
+ * Bootstrap navbar
+ */
+
+.navbar-custom {
+    background-color: #000000;
+}
+
+/* change the brand and text color */
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: #FFFFFF;
+    /* padding: 0.8rem 1rem; */
+}
+/* change the link color */
+.navbar-custom .navbar-nav .nav-link {
+    /* color: rgba(255,255,255,.5); */
+    color: #FFFFFF;
+    /* padding: 1rem 1rem; */
+}
+/* change the color of active or hovered links */
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:focus .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: rgba(255,255,255,.5);
+    /* background-color: #818f7d; add background-color to active links */
+}
+
+.navbar {
+    height: 50px;
+    padding: 0!important;
+}
+
+.nav-link {
+    font-size: 1.3em;
+}
+
+/*
+ * Bootstrap Pagination
+ */
+
+.pagination > li.page-item {
+    /*border-radius: 10%;*/
+    background-color: transparent;
+    /*border: 1px solid #a3aca0;*/
+    font-size: 0.75rem;
+    font-weight: 800;
+    /* line-height: 1rem; */
+    text-decoration: none;
+    outline: none;
+}
+
+.page-link {
+    color: #39525f!important;
+}
+
+
+.pagination > li.page-item.active {
+    background-color: #000000;
+    color: #f7f9fb;
+    padding: 0.25rem 0.75rem;
+}
+
+
+.character-large-image {
+    display: block;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+}
+
+
+.detail-page, .character-page {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.detail-page-title {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 2.5em;
+}
+
+.detail-page-title a {
+    /* color: #FFFFFF; */
+    background: -webkit-linear-gradient(#839ca9, #80a2b5, #7ca8c0, #78aecd, #73b4d9, #7eb9de, 
+                                      #89bee4, #93c3e9, #aac9e7, #becfe5, #ced6e3, #dddee0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card-text {
+    color: #000000;
+}
+
+.card {
+    margin-top: 10px;
+}
+
+.image {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: .3s ease;
+    backface-visibility: hidden;
+}
+
+.middle {
+    transition: .3s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    font-weight: 600px;
+}
+
+.middle a {
+    color: black;
+    text-decoration: none;
+}
+
+.middle a:active, .middle a:hover, .middle a:visited {
+    color: black;
+}
+
+.contain:hover .image {
+    opacity: 0.3;
+}
+
+.contain:hover .middle {
+    opacity: 1;
+}
+
+.contain {
+    color: black;
+}
+
+h2, .navbar-nav, .title, .tree-title {
+    font-family: 'Cinzel', serif;
+}
+
+
+.detail-page .title, .tree-title {
+    font-size: 1.3em;
+}
+
+.tree-title {
+    text-align: center;
+    color: #DDDEE0;
+}
+
+.title, h2 {
+    color: #DDDEE0;
+}
+
+.all-character-list {
+    margin: 0 auto;
+    width: 80%;
+    text-align: center;
+    list-style-type: none;
+}
+
+.all-character-list li a {
+    color: #a0bcc6;
+}
+
+.all-character-list li a:hover {
+    color: #dfeef5;
+}
+
+.family-char-img {
+    border: 1px solid white;
+    border-radius: 0.25rem;
+}
+
+.family-tie .row {
+    margin-top: 10px;
+    /* background-color: gray!important; */
+    padding-bottom: 5px;
+}
+
+.family-tie .title {
+    margin: 0;
+}
+
+.card-header {
+    padding: 0;
+    background: black;
+    color: white;
+    width: 120%;
+}
+
+.inner-card {
+    margin: 0;
+}
+
+.lower-row {
+    margin: 0!important;
+    padding-bottom: 0!important;
+}
+
+.tree-row {
+    margin-bottom: 20px;
+}

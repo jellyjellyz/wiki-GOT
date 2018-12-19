@@ -1,0 +1,144 @@
+{% extends 'gameofthrones/base.html' %}
+
+{% block content %}
+<main class="px-4 py-3 detail-page">
+    <div class="container-fluid">
+
+        {% if character.character_img_file_name %}
+
+        {% load static %}
+        {% with 'img/character_image_large_hbo/'|add:character.character_img_file_name as image_static %}
+        <img class="character-large-image" width="600px" src="{% static image_static %}" />
+        {% endwith %}
+
+        {% endif %}
+        <h2 class="detail-page-title"><b><a href={{character.character_url}}>{{character.full_name | safe}}</a></b></h2>
+
+        {% if toCharacters %}
+        <div class="family-tie row justify-content-md-center">
+            {% for key, value in toCharacters.items %}
+
+            {% if key == 'descendant' %}
+            <div class="col-12 justify-content-md-center tree-row">
+                <p class="tree-title lower-row" style="text-align:center"><b>{{ key }}</b></p>
+                <div class="row justify-content-md-center" style="margin-top: 0;">
+                    {% for dict in value %}
+                    <div class="col-1">
+                        <div class="card contain">
+                            {% if dict.character.character_img_file_name %}
+                            {% load static %}
+                            {% with 'img/character_images/'|add:dict.character.character_img_file_name as image_static%}
+                            <img class="family-char-img image" width="80px" src="{% static image_static %}" />
+                            {% endwith %}
+                            {% else %}
+                            <img class="family-char-img image" width="80px" src="{% static 'img/character_images/wildcard.jpg' %}" />
+                            {% endif %}
+
+                            <p class="middle">
+
+                                {% if dict.character %}
+                                <a href="{% url 'character_detail' dict.character.pk %}">
+                                    {{ dict.character.full_name }}
+                                    {% if dict.biological %}
+                                    ({{ dict.biological }})
+                                    {% endif %}
+                                </a>
+
+                                {% endif %}
+
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+
+            {% for dict in value %}
+            <div class="col-1 tree-row">
+                <p class="tree-title lower-row"><b>{{ key }}</b></p>
+                <div class="card" style="border: none;">
+                    <div class="card contain inner-card">
+                        {% if dict.character.character_img_file_name %}
+                        {% load static %}
+                        {% with 'img/character_images/'|add:dict.character.character_img_file_name as image_static%}
+                        <img class="family-char-img image" width="80px" src="{% static image_static %}" />
+                        {% endwith %}
+                        {% else %}
+                        <img class="family-char-img image" width="80px" src="{% static 'img/character_images/wildcard.jpg' %}" />
+                        {% endif %}
+
+                        <p class="middle">
+
+                            {% if dict.character %}
+                            <a href="{% url 'character_detail' dict.character.pk %}">
+                                {{ dict.character.full_name }}
+                                {% if dict.biological %}
+                                ({{ dict.biological }})
+                                {% endif %}
+                            </a>
+
+                            {% endif %}
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% endif %}
+
+            {% endfor %}
+        </div>
+
+        {% endif %}
+
+        {% if aliases %}
+        <div class="row">
+            <div class="col-2">
+                <p class="title"><b>Aliases</b></p>
+            </div>
+            <div class="col-10">
+                {{aliases}}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if titles %}
+        <div class="row">
+            <div class="col-2">
+                <p class="title"><b>Title</b></p>
+            </div>
+            <div class="col-10">
+                {{titles}}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if character.brief_intro %}
+        <div class="row">
+            <div class="col-2">
+                <p class="title"><b>Brief Introduction</b></p>
+            </div>
+            <div class="col-10">
+                {{character.brief_intro | safe}}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if character.full_intro %}
+        <div class="row">
+            <div class="col-sm-2">
+                <p class="title"><b>Full Introduction</b></p>
+            </div>
+            <div class="col-sm-10">
+                {{character.full_intro | safe}}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</main>
+
+
+{% endblock content %}}
