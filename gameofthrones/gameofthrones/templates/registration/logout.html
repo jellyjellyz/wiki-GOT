@@ -1,0 +1,14 @@
+{% extends 'gameofthrones/base.html' %}
+
+{% block content %}
+<main class="px-4 py-3 character-page">
+    <div class="container-fluid">
+        <header>
+            <h2>Game of Thrones Logout Page</h2>
+        </header>
+
+        <h2>Login</h2>
+        <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a><br>
+    </div>
+</main>
+{% endblock content %}

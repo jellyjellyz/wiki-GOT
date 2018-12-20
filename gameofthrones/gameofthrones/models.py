@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
+from django.urls import reverse
 
 class BiologicalType(models.Model):
     biological_type_id = models.AutoField(primary_key=True)
@@ -24,7 +24,7 @@ class BiologicalType(models.Model):
 
 class CharacterAliase(models.Model):
     character_aliase_id = models.AutoField(primary_key=True)
-    character = models.ForeignKey('CharacterInfo', models.DO_NOTHING)
+    character = models.ForeignKey('CharacterInfo', on_delete=models.PROTECT)
     aliase = models.CharField(max_length=100)
 
     class Meta:
@@ -36,13 +36,27 @@ class CharacterAliase(models.Model):
     def __str__(self):
         return ':'.join([self.character, self.aliase])
 
+class CharacterTitle(models.Model):
+    character_title_id = models.AutoField(primary_key=True)
+    character = models.ForeignKey('CharacterInfo', on_delete=models.PROTECT)
+    title_name = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'character_title'
+        verbose_name ='character title'
+        verbose_name_plural = 'character titles'
+        ordering = ['character', 'title_name']
+    def __str__(self):
+        return ':'.join([self.character, self.title_name])
+
 
 class CharacterFamilyTie(models.Model):
     family_tie_id = models.AutoField(primary_key=True)
-    character1 = models.ForeignKey('CharacterInfo', models.DO_NOTHING, related_name='from_character')
-    character2 = models.ForeignKey('CharacterInfo', models.DO_NOTHING, related_name='to_character')
-    relation_type = models.ForeignKey('RelationType', models.DO_NOTHING, blank=True, null=True)
-    biological_type = models.ForeignKey(BiologicalType, models.DO_NOTHING, blank=True, null=True)
+    character1 = models.ForeignKey('CharacterInfo', on_delete=models.CASCADE, related_name='from_character')
+    character2 = models.ForeignKey('CharacterInfo', on_delete=models.CASCADE, related_name='to_character')
+    relation_type = models.ForeignKey('RelationType', on_delete=models.CASCADE, blank=True, null=True)
+    biological_type = models.ForeignKey(BiologicalType, on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -61,13 +75,13 @@ class CharacterInfo(models.Model):
     is_main_character = models.IntegerField()
     brief_intro = models.TextField(blank=True, null=True)
     full_intro = models.TextField()
-    character_url = models.CharField(unique=True, max_length=255)
+    character_url = models.CharField(unique=True, max_length=255, blank=True)
     character_img_file_name = models.CharField(unique=True, max_length=100, blank=True, null=True)
-    house = models.ForeignKey('House', models.DO_NOTHING, blank=True, null=True)
-    culture = models.ForeignKey('Culture', models.DO_NOTHING, blank=True, null=True)
+    house = models.ForeignKey('House', on_delete=models.PROTECT, blank=True, null=True)
+    culture = models.ForeignKey('Culture', on_delete=models.PROTECT, blank=True, null=True)
 
     # intermediate model ()
-    character2 = models.ManyToManyField('self', through='CharacterFamilyTie', symmetrical=False, related_name='related_to')
+    character2 = models.ManyToManyField('self', through='CharacterFamilyTie', symmetrical=False, related_name='related_to', blank=True)
 
     class Meta:
         managed = False
@@ -75,23 +89,14 @@ class CharacterInfo(models.Model):
         verbose_name = 'character'
         verbose_name_plural = 'characters'
         ordering = ['full_name']
+
+    def get_absolute_url(self):
+        # return reverse('site_detail', args=[str(self.id)])
+        return reverse('character_detail', kwargs={'pk': self.pk})
+
     def __str__(self):
         return self.full_name
 
-
-class CharacterTitle(models.Model):
-    character_title_id = models.AutoField(primary_key=True)
-    character = models.ForeignKey(CharacterInfo, models.DO_NOTHING)
-    title_name = models.CharField(max_length=255)
-
-    class Meta:
-        managed = False
-        db_table = 'character_title'
-        verbose_name ='character title'
-        verbose_name_plural = 'character titles'
-        ordering = ['character', 'title_name']
-    def __str__(self):
-        return ':'.join([self.character, self.title_name])
 
 
 class Culture(models.Model):

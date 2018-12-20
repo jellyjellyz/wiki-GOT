@@ -21,23 +21,7 @@ class CharacterAliaseAdmin(admin.ModelAdmin):
     list_display = ['character', 'aliase']
     ordering = ['character']
 
-@admin.register(models.CharacterFamilyTie)
-class CharacterFamilyTieAdmin(admin.ModelAdmin):
-	fields = [
-		'character1',
-		'character2',
-		'relation_type',
-        'biological_type'
-	]
 
-	list_display = [
-		'character1',
-		'character2',
-		'relation_type',
-        'biological_type'
-	]
-
-# admin.site.register(models.CharacterFamilyTie)
 
 
 @admin.register(models.CharacterTitle)

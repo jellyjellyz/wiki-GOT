@@ -5,7 +5,22 @@
     <div class="container-fluid">
         <article>
             <header>
-                <h2><b>All Characters</b></h2>
+                <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <h2><b>All Characters</b></h2>
+                    </div>
+                    <div class="col-sm-4">
+                        {% if user.is_authenticated %}
+                        <a class="btn btn-outline-secondary" href="{% url 'character_new' %}">new character</a>
+                        &nbsp;
+                        <a class="btn btn-outline-secondary" href="{% url 'relation_new' %}">new relationship</a>
+                        {% else %}
+                        <a href="{% url 'login' %}">Log in</a>
+                        {% endif %}
+                    </div>
+                </div>
+
             </header>
 
             {% include './pagination.html' %}

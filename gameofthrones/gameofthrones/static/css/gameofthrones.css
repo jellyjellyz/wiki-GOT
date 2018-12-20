@@ -16,6 +16,27 @@ body {
     color: #FFFFFF;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+
+footer {
+    clear: both;
+    position: relative;
+    height: 40px;
+    margin-top: auto;
+}
+
+footer a {
+    color: gray;
+}
+
+footer a:hover {
+    color: rgb(165, 165, 165);
+}
+
 a, a:hover {
     text-decoration: none;
 }
@@ -101,8 +122,12 @@ header {
     text-align: center;
 }
 
+.home-page, .detail-page, .character-page, .edit-page, .about-page  {
+    min-height: 100%;
+}
 
-.detail-page, .character-page {
+
+.detail-page, .character-page, .edit-page, .about-page {
     background: rgba(0, 0, 0, 0.8);
 }
 
@@ -237,3 +262,15 @@ h2, .navbar-nav, .title, .tree-title {
 .tree-row {
     margin-bottom: 20px;
 }
+
+.house-name {
+    font-family: 'Parisienne', cursive;
+    font-size: 1.3rem;
+}
+
+.search-result {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #FFFFFF!important;
+}
+

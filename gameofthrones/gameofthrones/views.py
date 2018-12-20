@@ -1,9 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
+from django.urls import reverse_lazy
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django_filters.views import FilterView
 
 from .models import CharacterInfo, CharacterFamilyTie, CharacterAliase, CharacterTitle
-
+from .forms import CharacterInfoForm, RelationForm
+from .filters import CharacterFilter
 
 # Create your views here.
 def index(request):
@@ -16,6 +22,10 @@ class AboutPageView(generic.TemplateView):
 
 class HomePageView(generic.TemplateView):
     template_name = 'gameofthrones/home.html'
+
+class CharacterFilterView(FilterView):
+	filterset_class = CharacterFilter
+	template_name = 'gameofthrones/character_filter.html'
 
 
 class MainCharacterListView(generic.ListView):
@@ -86,3 +96,100 @@ class CharacterDetailView(generic.DetailView):
             temp.append(a.aliase)
         context['aliases'] = (', ').join(temp)
         return context
+
+@method_decorator(login_required, name='dispatch')
+class CharacterCreateView(generic.View):
+	model = CharacterInfo
+	form_class = CharacterInfoForm
+	success_message = "Character created successfully"
+	template_name = 'gameofthrones/character_new.html'
+	# field = '__all__' <-- superseded by form_class
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def post(self, request):
+		form = CharacterInfoForm(request.POST)
+		if form.is_valid():
+			character = form.save(commit=False)
+			character.save()
+			# for country in form.cleaned_data['country_area']:
+			# 	CharacterFamilyTie.objects.create(character1=site, country_area=country)
+			return HttpResponseRedirect(reverse_lazy('characters'))
+		else:
+			print(form.errors)
+		return render(request, 'gameofthrones/character_new.html', {'form': form})
+	
+	def get(self, request):
+		form = CharacterInfoForm()
+		return render(request, 'gameofthrones/character_new.html', {'form': form})
+
+@method_decorator(login_required, name='dispatch')
+class CharacterUpdateView(generic.UpdateView):
+	model = CharacterInfo
+	form_class = CharacterInfoForm
+	context_object_name = 'character'
+# 	# pk_url_kwarg = 'site_pk'
+	success_message = "Character updated successfully"
+	template_name = 'gameofthrones/character_update.html'
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def form_valid(self, form):
+		character = form.save(commit=False)
+		character.save()
+
+		return HttpResponseRedirect(character.get_absolute_url())
+
+
+@method_decorator(login_required, name='dispatch')
+class CharacterDeleteView(generic.DeleteView):
+    model = CharacterInfo
+    success_message = "Character deleted successfully"
+    success_url = reverse_lazy('characters')
+    context_object_name = 'character'
+    template_name = 'gameofthrones/character_delete.html'
+
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        # # Delete Character_family_tie entries
+        CharacterFamilyTie.objects \
+        	.filter(character1=self.object.character_id) \
+        	.delete()
+
+        self.object.delete()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+@method_decorator(login_required, name='dispatch')
+class RelationCreateView(generic.View):
+    model = CharacterFamilyTie
+    form_class = RelationForm
+    success_message = "Relation created successfully"
+    template_name = 'gameofthrones/relationship_new.html'
+    
+    # field = '__all__' <-- superseded by form_class
+    # success_url = reverse_lazy('heritagesites/site_list')
+
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request):
+        form = RelationForm(request.POST)
+        if form.is_valid():
+            relation = form.save(commit=False)
+            relation.save()
+            print(form.cleaned_data)
+            return HttpResponseRedirect(reverse_lazy('characters'))
+        return render(request, 'gameofthrones/relationship_new.html', {'form': form})
+
+    def get(self, request):
+        form = RelationForm()
+        return render(request, 'gameofthrones/relationship_new.html', {'form': form})
+
+

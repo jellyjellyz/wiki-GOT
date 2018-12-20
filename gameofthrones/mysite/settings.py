@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from mysite import secret
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,13 +32,30 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'gameofthrones.apps.GameofthronesConfig',
+    'social_django',
+    'rest_framework_swagger',
+
+    # Third-party
+    'crispy_forms',
+    'django_filters',
+    'rest_framework',
+    'corsheaders',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth.registration',
+    
 ]
 
 MIDDLEWARE = [
@@ -48,6 +66,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -63,6 +84,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',                     # <-- Add
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
@@ -125,3 +148,66 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# django-crispy-forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+
+# Authentication backends
+# Must include the default Django Auth ModelBackend for the admin site
+
+AUTHENTICATION_BACKENDS = (
+    # 'social_core.backends.open_id.OpenIdAuth',
+    # 'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',                                  # <-- Uncomment
+    # 'social_core.backends.google.GoogleOAuth',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.yahoo.YahooOpenId',
+    'django.contrib.auth.backends.ModelBackend',                                 # <-- Uncomment
+)
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = secret.CLIENT_ID
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secret.CLIENT_SECRET
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+LOGIN_URL = '/auth/login/google-oauth2/'
+# LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+# Use Django's standard `django.contrib.auth` permissions, or allow read-only access for
+# unauthenticated users.
+# Default Auth: Basic (retired in favor of TokenAuth)
+# Default Auth: SessionAuth (required by browsable API)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+	    'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # 'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
+# A list of origin hostnames that are authorized to make cross-site HTTP requests.
+# The value 'null' can also appear in this list, and will match the Origin: null header
+# that is used in “privacy-sensitive contexts”, such as when the client is running from
+# a file:// domain. Defaults to [].
+# Port 3000 is the default port for React apps.
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:3000/'
+)
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SITE_ID = 1

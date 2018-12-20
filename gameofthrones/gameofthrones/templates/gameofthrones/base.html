@@ -14,7 +14,7 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900|Lato:400,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700,900|Lato:400,700,900|Parisienne" rel="stylesheet">
 
     <!-- fix -->
     {% load static %}
@@ -29,8 +29,7 @@
     <nav class="navbar navbar-expand-sm navbar-dark navbar-custom sticky-top px-4 py-2">
 
         <div class="row mx-auto">
-            <!-- <a class="navbar-brand" href="{% url 'home' %}">
-                <i class="fas fa-globe-americas"></i>&nbsp;Game of Thrones</a> -->
+
             <a class="navbar-brand" href="{% url 'home' %}">
                 {% load static %}
                 <img width="200" src="{% static 'img/label.jpeg' %}">
@@ -48,6 +47,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'characters' %}">All</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'character_filter' %}">search<i class="fas fa-search"></i></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">login</a>
+                </li>
             </ul>
         </div>
 
@@ -64,7 +71,7 @@
     </main> -->
 
     <footer class="px-4 py-2">
-        <p>Copyright &copy; 2018 <a href="mailto:jellyz@umich.edu">Jiayu Zhang</a></p>
+        <p style="color: gray;">Copyright &copy; 2018 <a href="mailto:jellyz@umich.edu">Jiayu Zhang</a></p>
     </footer>
 
     <!-- Get <script> tags: https://getbootstrap.com/docs/4.0/getting-started/download/ -->

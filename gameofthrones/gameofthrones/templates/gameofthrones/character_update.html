@@ -1,0 +1,88 @@
+{% extends 'gameofthrones/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<main class="px-4 py-3 edit-page">
+    <div class="container-fluid">
+
+        <header>
+            <h2>Character Update</h2>
+        </header>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.full_name|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.is_male|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.is_main_character|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.house|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.culture|as_crispy_field }}
+                </div>
+            </div>
+<!-- 
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.culture|as_crispy_field }}
+                </div>
+            </div> -->
+
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.brief_intro|as_crispy_field }}
+                </div>
+            </div>
+
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.full_intro|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {{ form.character_url|as_crispy_field }}
+                </div>
+            </div>
+
+
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    <button type="submit" class="btn btn-outline-success">Update</button>
+                    &nbsp;<a class="btn btn-outline-secondary" href="{% url 'character_detail' character.pk %}">cancel</a>
+                </div>
+            </div>
+
+
+        </form>
+
+    </div>
+</main>
+
+{% endblock content %}
