@@ -33,6 +33,14 @@ class CharacterTitleAdmin(admin.ModelAdmin):
 # admin.site.register(models.CharacterTitle)
 
 
+class CharacterFamilyTieInline(admin.TabularInline):
+	model = models.CharacterFamilyTie
+	fk_name = 'character1'
+
+
+# admin.site.register(models.CharacterFamilyTie)
+
+
 @admin.register(models.CharacterInfo)
 class CharacterInfoAdmin(admin.ModelAdmin):
 	fieldsets = (
@@ -68,6 +76,10 @@ class CharacterInfoAdmin(admin.ModelAdmin):
         'house',
         'culture'
 	)
+
+	inlines = [
+		CharacterFamilyTieInline,
+	]
 
 # admin.site.register(models.CharacterInfo)
 

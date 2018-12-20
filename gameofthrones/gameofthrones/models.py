@@ -64,8 +64,6 @@ class CharacterFamilyTie(models.Model):
         verbose_name = 'character family tie'
         verbose_name_plural = 'character family ties'
         ordering = ['character1', 'character2']
-    def __str__(self):
-        return ','.join([self.character1, self.character2, self.relation_type, self.biological_type])
 
 
 class CharacterInfo(models.Model):
