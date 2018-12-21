@@ -37,15 +37,15 @@ There are 8 tables in total, character is the main entity, all other tables are 
 
 `is_male`: gender of the character. male: 1, female: 0 
 
-`is_main_character`: if the character is main character. true: 1, false: 0 (_data scraped from [HBO offical site](https://www.hbo.com/game-of-thrones/cast-and-crew)_)
+`is_main_character`: if the character is main character. true: 1, false: 0
 
-`brief_intro`: short introduction for the character. only main characters have brief_intro  (_data scraped from [HBO offical site](https://www.hbo.com/game-of-thrones/cast-and-crew)_)
+`brief_intro`: short introduction for the character. only main characters have brief_intro
 
-`full_intro`: long introduction for the character. all characters have full_intro (_data scraped from [Fandom](https://gameofthrones.fandom.com/wiki/Game_of_Thrones_Wiki)_)
+`full_intro`: long introduction for the character. all characters have full_intro
 
-`character_url`: url of external link for the character.  (_data scraped from [Fandom](https://gameofthrones.fandom.com/wiki/Game_of_Thrones_Wiki)_)
+`character_url`: url of external link for the character
 
-`character_img_file_name`: image file name for the character. only main characters have image file. (_data scraped from [HBO offical site](https://www.hbo.com/game-of-thrones/cast-and-crew)_)
+`character_img_file_name`: image file name for the character. only main characters have image file.
 
 `house_id`: belonged house for the character. foreign key refers to table **house**.
 
