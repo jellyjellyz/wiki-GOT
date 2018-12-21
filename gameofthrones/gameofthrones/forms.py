@@ -4,6 +4,7 @@ from crispy_forms.layout import Submit
 from gameofthrones.models import CharacterInfo, CharacterFamilyTie
 
 class CharacterInfoForm(forms.ModelForm):
+
     class Meta:
         model = CharacterInfo
         fields = '__all__'
@@ -14,6 +15,12 @@ class CharacterInfoForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', 'submit'))
 
+
+CharacterFormSet = forms.inlineformset_factory(CharacterInfo, CharacterFamilyTie, 
+                   fk_name='character1', fields=('character2', 'relation_type', 'biological_type', ), extra=1)
+
+# CharacterFormSet = forms.inlineformset_factory(CharacterInfo, CharacterFamilyTie, 
+#                    fk_name='character1', fields=('character2', 'relation_type', 'biological_type', ), extra=1)
 
 class RelationForm(forms.ModelForm):
     class Meta:

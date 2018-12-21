@@ -119,3 +119,9 @@ wheel                  0.32.3
 
 
 
+## Future work
+
+1. Since there are two extra fields in the many to many table, I haven't figured out a way to let user edit (add/update/delete) family tie in character update page. I tried to use `inlineformset_factory`, but it doesn't work as expected. So I separately add a new page `new relationship` to create new many to many relationship. However, user can edit family tie in character detail page in admin site.
+2. Missing relation auto-update function for now. The family relation ship should be bidirectional, i.e. if user add A is B's father, it should automatically add a new relationship (B is A's descendant). 
+3. Editing relation in REST API. User is not able to edit the additional fields `relation_type` and`biological_type`. 
+

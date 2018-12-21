@@ -8,10 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django_filters.views import FilterView
 
 from .models import CharacterInfo, CharacterFamilyTie, CharacterAliase, CharacterTitle
-from .forms import CharacterInfoForm, RelationForm
+from .forms import CharacterInfoForm, RelationForm, CharacterFormSet
 from .filters import CharacterFilter
 
 # Create your views here.
+
+
 def index(request):
     return HttpResponse("Hello, world.")
 
@@ -23,9 +25,10 @@ class AboutPageView(generic.TemplateView):
 class HomePageView(generic.TemplateView):
     template_name = 'gameofthrones/home.html'
 
+
 class CharacterFilterView(FilterView):
-	filterset_class = CharacterFilter
-	template_name = 'gameofthrones/character_filter.html'
+    filterset_class = CharacterFilter
+    template_name = 'gameofthrones/character_filter.html'
 
 
 class MainCharacterListView(generic.ListView):
@@ -73,7 +76,7 @@ class CharacterDetailView(generic.DetailView):
                 biological = family_tie.biological_type.biological_type_name
 
             if relation != '':
-                if  relation in context['toCharacters']:
+                if relation in context['toCharacters']:
                     context['toCharacters'][relation].append(
                         {'character': c, 'biological': biological})
                 else:
@@ -97,50 +100,58 @@ class CharacterDetailView(generic.DetailView):
         context['aliases'] = (', ').join(temp)
         return context
 
+
 @method_decorator(login_required, name='dispatch')
-class CharacterCreateView(generic.View):
-	model = CharacterInfo
-	form_class = CharacterInfoForm
-	success_message = "Character created successfully"
-	template_name = 'gameofthrones/character_new.html'
-	# field = '__all__' <-- superseded by form_class
+class CharacterCreateView(generic.CreateView):
+    model = CharacterInfo
+    form_class = CharacterInfoForm
+    success_message = "Character created successfully"
+    template_name = 'gameofthrones/character_new.html'
 
-	def dispatch(self, *args, **kwargs):
-		return super().dispatch(*args, **kwargs)
+    # field = '__all__' <-- superseded by form_class
 
-	def post(self, request):
-		form = CharacterInfoForm(request.POST)
-		if form.is_valid():
-			character = form.save(commit=False)
-			character.save()
-			# for country in form.cleaned_data['country_area']:
-			# 	CharacterFamilyTie.objects.create(character1=site, country_area=country)
-			return HttpResponseRedirect(reverse_lazy('characters'))
-		else:
-			print(form.errors)
-		return render(request, 'gameofthrones/character_new.html', {'form': form})
-	
-	def get(self, request):
-		form = CharacterInfoForm()
-		return render(request, 'gameofthrones/character_new.html', {'form': form})
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['familyties'] = CharacterFormSet(queryset=CharacterFamilyTie.objects.filter(character1=self.object).values())
+        return data
+
+    def post(self, request):
+        form = CharacterInfoForm(request.POST)
+        if form.is_valid():
+            character = form.save(commit=False)
+            character.save()
+
+            return HttpResponseRedirect(reverse_lazy('characters'))
+        else:
+            print(form.errors)
+        return render(request, 'gameofthrones/character_new.html', {'form': form})
+
+    def get(self, request):
+        form = CharacterInfoForm()
+        return render(request, 'gameofthrones/character_new.html', {'form': form})
+
 
 @method_decorator(login_required, name='dispatch')
 class CharacterUpdateView(generic.UpdateView):
-	model = CharacterInfo
-	form_class = CharacterInfoForm
-	context_object_name = 'character'
+    model = CharacterInfo
+    form_class = CharacterInfoForm
+    context_object_name = 'character'
 # 	# pk_url_kwarg = 'site_pk'
-	success_message = "Character updated successfully"
-	template_name = 'gameofthrones/character_update.html'
+    success_message = "Character updated successfully"
+    template_name = 'gameofthrones/character_update.html'
 
-	def dispatch(self, *args, **kwargs):
-		return super().dispatch(*args, **kwargs)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-	def form_valid(self, form):
-		character = form.save(commit=False)
-		character.save()
+    def form_valid(self, form):
+        character = form.save(commit=False)
+        character.save()
 
-		return HttpResponseRedirect(character.get_absolute_url())
+        return HttpResponseRedirect(character.get_absolute_url())
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -159,12 +170,13 @@ class CharacterDeleteView(generic.DeleteView):
 
         # # Delete Character_family_tie entries
         CharacterFamilyTie.objects \
-        	.filter(character1=self.object.character_id) \
-        	.delete()
+            .filter(character1=self.object.character_id) \
+            .delete()
 
         self.object.delete()
 
         return HttpResponseRedirect(self.get_success_url())
+
 
 @method_decorator(login_required, name='dispatch')
 class RelationCreateView(generic.View):
@@ -172,7 +184,7 @@ class RelationCreateView(generic.View):
     form_class = RelationForm
     success_message = "Relation created successfully"
     template_name = 'gameofthrones/relationship_new.html'
-    
+
     # field = '__all__' <-- superseded by form_class
     # success_url = reverse_lazy('heritagesites/site_list')
 
@@ -191,5 +203,3 @@ class RelationCreateView(generic.View):
     def get(self, request):
         form = RelationForm()
         return render(request, 'gameofthrones/relationship_new.html', {'form': form})
-
-
