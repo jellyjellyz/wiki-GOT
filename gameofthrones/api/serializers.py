@@ -23,26 +23,30 @@ class HouseSerializer(serializers.ModelSerializer):
 		model = House
 		fields = ('house_id', 'house_name', 'house_img_file_name')
 
+
 class RelationTypeSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = RelationType
 		fields = ('relation_type_id', 'relation_type_name')
 
+
 class CharacterFamilyTieSerializer(serializers.ModelSerializer):
     character1_id = serializers.ReadOnlyField(source='character_info.character_id')
     character2_id = serializers.ReadOnlyField(source='character_info.character_id')
     relation_type = RelationTypeSerializer(many=False, read_only=True)
     biological_type = BiologicalTypeSerializer(many=False, read_only=True)
+
     class Meta:
         model = CharacterFamilyTie
         fields = ('character1_id', 'character2_id', 'relation_type', 'biological_type')
 
 
 class CharacterInfoSerializer(serializers.ModelSerializer):
+
     full_name = serializers.CharField(
         allow_blank=False,
-        max_length=255
+        max_length=100
     )
     is_male = serializers.IntegerField(
         allow_null=False
@@ -62,7 +66,6 @@ class CharacterInfoSerializer(serializers.ModelSerializer):
     character_img_file_name = serializers.CharField(
         allow_null=True
     )
-
     house = HouseSerializer(
         many=False,
         read_only=True
@@ -74,7 +77,6 @@ class CharacterInfoSerializer(serializers.ModelSerializer):
         queryset=House.objects.all(),
         source='house'
     )
-
     culture = CultureSerializer(
         many=False,
         read_only=True
@@ -86,18 +88,13 @@ class CharacterInfoSerializer(serializers.ModelSerializer):
         queryset=Culture.objects.all(),
         source='culture'
     )
-
     character_family_tie = CharacterFamilyTieSerializer(
         source='character_family_tie_set', # Note use of _set
         many=True,
         read_only=True
     )
-
-
-    character_family_tie_ids = serializers.PrimaryKeyRelatedField(
-        many=True,
+    character_family_ties = serializers.ListField(
         write_only=True,
-        queryset=CharacterInfo.objects.all(),
         source='character_family_tie'
     )
 
@@ -117,7 +114,7 @@ class CharacterInfoSerializer(serializers.ModelSerializer):
             'culture',
             'culture_id',
             'character_family_tie',
-            'character_family_tie_ids'
+            'character_family_ties'
         )
 
     def create(self, validated_data):
@@ -134,23 +131,24 @@ class CharacterInfoSerializer(serializers.ModelSerializer):
 
         # print(validated_data)
 
-        to_characters = validated_data.pop('character_family_tie')
+        characters = validated_data.pop('character_family_tie')
         character = CharacterInfo.objects.create(**validated_data)
+        character_id = character.character_id
 
-        if to_characters is not None:
-        	for c in to_characters:
+        if characters is not None:
+        	for character in characters:
         		CharacterFamilyTie.objects.create(
-        			character1_id=character.character_id,
-        			character2_id=c.character_id,
-                    relation_type_id = 1,
-                    biological_type_id = 1
+        			character1_id=character_id,
+        			character2_id=character['character2_id'],
+                    relation_type_id=character['relation_type_id'],
+                    biological_type_id=character['biological_type_id']
         		)
+
         return character
 
     def update(self, instance, validated_data):
-        
         character_id = instance.character_id
-        new_tocharacters = validated_data.pop('character_family_tie')
+        characters = validated_data.pop('character_family_tie')
 
         instance.full_name = validated_data.get(
             'full_name',
@@ -159,10 +157,6 @@ class CharacterInfoSerializer(serializers.ModelSerializer):
         instance.is_male = validated_data.get(
             'is_male',
             instance.is_male
-        )
-        instance.justification = validated_data.get(
-            'justification',
-            instance.justification
         )
         instance.is_main_character = validated_data.get(
             'is_main_character',
@@ -200,27 +194,29 @@ class CharacterInfoSerializer(serializers.ModelSerializer):
             .values_list('character2_id', flat=True) \
             .filter(character1_id=character_id)
 
-        # TODO Insert may not be required (Just return instance)
-
         # Insert new unmatched country entries
-        for c in new_tocharacters:
-            new_id = c.character_id
+        for character in characters:
+            new_id = character['character2_id']
             new_ids.append(new_id)
             if new_id in old_ids:
                 continue
             else:
-                CharacterFamilyTie.objects \
-                    .create(character1_id=character_id, character2_id=new_id, relation_type_id = relation_type.relation_type_id,
-                    biological_type = biological_type.biological_type_id)
+                CharacterFamilyTie.objects.create(
+                    character1_id=character_id,
+                    character2_id=new_id,
+                    relation_type_id = character['relation_type_id'],
+                    biological_type_id = character['biological_type_id']
+                )
 
         # Delete old unmatched country entries
         for old_id in old_ids:
             if old_id in new_ids:
                 continue
             else:
-                CharacterFamilyTie.objects \
-                    .filter(character1_id=character_id, character2_id=new_id) \
-                    .delete()
+                CharacterFamilyTie.objects.filter(
+                    character1_id=character_id,
+                    character2_id=old_id
+                ).delete()
 
         return instance
 
