@@ -243,7 +243,5 @@ pip-selfcheck.json
 ### Django secret file ###
 **/secret.py
 
-# dumped data
-*.sql
 
 
